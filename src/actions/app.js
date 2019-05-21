@@ -10,43 +10,53 @@ export const navigate = (location) => (dispatch) => {
   // Any other info you might want to extract from the path (like page type), you can do here.
   const pathname = location.pathname;
   const parts = pathname.slice(1).split('/');
-  const page = parts[0] || 'home';
+  const page = parts[0] || 'predict';
   // prediction id is in the path: /prediction/{predictionId}
   const predId = parts[1];
-  // model is extracted from the search string: /explore?q={query}
+  // model is extracted from the search string: /predictions?model={model}
   const match = RegExp('[?&]model=([^&]*)').exec(location.search);
   const model = match && decodeURIComponent(match[1].replace(/\+/g, ' '));
 
-  dispatch(loadPage(page, model, predId));
+  dispatch(loadPage(page, predId));
 
   // Close the drawer - in case the *path* change came from a link in the drawer.
   dispatch(updateDrawerState(false));
 };
 
-const loadPage = (page, model, predId) => async (dispatch, getState) => {
+const loadPage = (page, predId) => async (dispatch, getState) => {
   let module;
   switch (page) {
-    case 'home':
-      await import('../components/classifier-home.js');
+    case 'predict':
+      await import('../components/classifier-predict.js');
       break;
-    case 'explore':
-      module = await import('../components/classifier-explore.js');
-
-      dispatch(module.fetchPredictions(model));
-      // TODO: What if model doesn't exist?
-      break;
-    case 'about':
-      await import('../components/classifier-about.js');
+    case 'predictions':
+      module = await import('../components/classifier-predictions.js');
+      dispatch(module.fetchPredictions());
       break;
     case 'prediction':
+      if (!predId) {
+        page = 'view404';
+        break;
+      }
       module = await import('../components/classifier-prediction.js');
 
       // Fetch the prediction from the given prediction id.
-      dispatch(module.fetchPrediction(predId));
+      let pred = getState().prediction;
+      if (pred && pred.isFetching) {
+        break;
+      }
 
+      dispatch(module.fetchPrediction(predId));
       if (isFetchPredictionFailed(getState().prediction)) {
         page = 'view404';
       }
+
+      break;
+    case 'train':
+      await import('../components/classifier-train.js');
+      break;
+    case 'feedback':
+      await import('../components/classifier-feedback.js');
       break;
     default:
       page = 'view404';
