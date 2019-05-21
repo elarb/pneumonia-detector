@@ -1,11 +1,11 @@
 {
-  "name": "Classifier App",
-  "short_name": "Classifier App",
-  "description": "Classifier App description",
+  "name": "Pneumonia Detector App",
+  "short_name": "Pneumonia Detector",
+  "description": "Detect cases of Pneumonia by uploading chest X-ray images.",
   "start_url": "/",
   "display": "standalone",
-  "theme_color": "#3f51b5",
-  "background_color": "#3f51b5",
+  "theme_color": "#42a5f5",
+  "background_color": "#42a5f5",
   "icons": [
     {
       "src": "images/manifest/icon-192x192.png",
