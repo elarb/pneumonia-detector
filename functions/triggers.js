@@ -112,7 +112,7 @@ exports.callCustomModel = async object => {
   let pred = {
     // Get only the first prediction response
     result: response[0]['payload'],
-    predId,
+    id: predId,
     userId,
     model,
     fileName,
