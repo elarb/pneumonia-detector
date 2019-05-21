@@ -34,8 +34,8 @@ describe('routing tests', function() {
     await page.goto(`${appUrl}`);
     await page.waitForSelector('classifier-app', {visible: true});
 
-    await testNavigation(page, 'about', 'About');
-    await testNavigation(page, 'home', 'Home');
+    await testNavigation(page, 'feedback', 'Feedback');
+    await testNavigation(page, 'predict', 'Predict');
   });
 
   it('the page selector switches pages in a different way', async function() {
@@ -58,8 +58,8 @@ describe('routing tests', function() {
       console.log(window.deepQuerySelector);
     });
 
-    await testNavigationInADifferentWay(page, 'about', 'About');
-    await testNavigationInADifferentWay(page, 'home', 'Home');
+    await testNavigationInADifferentWay(page, 'feedback', 'Feedback');
+    await testNavigationInADifferentWay(page, 'predict', 'Predict');
   });
 });
 
