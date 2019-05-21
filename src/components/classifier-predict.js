@@ -13,7 +13,7 @@ import {listenPrediction} from "../actions/prediction.js";
 
 store.addReducers({prediction});
 
-class ClassifierHome extends connect(store)(PageViewElement) {
+class ClassifierPredict extends connect(store)(PageViewElement) {
   static get properties() {
     return {
       _page: {type: String},
@@ -79,7 +79,7 @@ class ClassifierHome extends connect(store)(PageViewElement) {
   render() {
     return html`
       <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/4.0.0/firebaseui.css" />
-      <classifier-image class="classifier-bg" alt="Pneumonia Detector Home" center src="images/xray-bg.jpg" placeholder=""></classifier-image>
+      <classifier-image class="classifier-bg" alt="Pneumonia Detector Image" center src="images/xray-bg.jpg" placeholder=""></classifier-image>
       <div class="classifier-desc">Detect cases of Pneumonia by uploading chest X-ray images.</div>
       <div class="upload-field" ?hidden="${!this._user}">
         <p class="img-req">Maximum file size is 1.5MB. Supported formats: JPEG, PNG, GIF</p>
@@ -118,9 +118,7 @@ class ClassifierHome extends connect(store)(PageViewElement) {
 
     const predId = uuid4();
 
-    // TODO: Make user pick a model
-    const model = 'pneumonia';
-    const path = `user/uploads/${this._user.uid}/${model}/${predId}/${file.name}`;
+    const path = `user/uploads/${this._user.uid}/pneumonia/${predId}/${file.name}`;
 
     let imgRef = storageRef.child(path);
     let uploadTask = imgRef.put(file);
@@ -155,6 +153,8 @@ class ClassifierHome extends connect(store)(PageViewElement) {
       file.complete = true;
       this.vaadinUpload._notifyFileChanges(file);
       store.dispatch(updateLocationURL(`/prediction/${predId}`));
+      // Clear the fi;es
+      this.vaadinUpload.files = [];
     });
   }
 
@@ -197,4 +197,4 @@ class ClassifierHome extends connect(store)(PageViewElement) {
   }
 }
 
-window.customElements.define('classifier-home', ClassifierHome);
+window.customElements.define('classifier-predict', ClassifierPredict);

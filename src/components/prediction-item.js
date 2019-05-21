@@ -1,7 +1,8 @@
 import {LitElement, html, css} from 'lit-element';
 
 import './classifier-image.js';
-import {MwcStyle} from "./mwc-style";
+import {MwcStyle} from "./mwc-style.js";
+import {formatDate} from "../utils.js";
 
 class PredictionItem extends LitElement {
   static get styles() {
@@ -13,7 +14,7 @@ class PredictionItem extends LitElement {
       }
       
       .prediction-card {
-        width: 100%px;
+        width: 100%;
       }
       
       .prediction-card__primary {
@@ -38,7 +39,7 @@ class PredictionItem extends LitElement {
       
       .confidence-score {
         width: 32px;
-        height: 20px;
+        height: 24px;
         position: absolute;
         bottom: 0;
         right: 0;
@@ -58,9 +59,8 @@ class PredictionItem extends LitElement {
 
   render() {
     const item = this.item ? this.item : null;
-    const id = item ? item.predId : '';
-    const date = (item && item.timestamp && (Number.isInteger(item.timestamp))) ?
-      new Date(item.timestamp).toISOString().replace(/T/, ' ').replace(/\..+/, '') : '';
+    const id = item && item.id ? item.id : '';
+    const date = (item && item.timestamp && (Number.isInteger(item.timestamp))) ? formatDate(item.timestamp) : '';
 
     const thumbnail = item ? item.thumbUrl : null;
     const fileName = item ? item.fileName : '';
@@ -72,10 +72,6 @@ class PredictionItem extends LitElement {
     const displayName = result ? result.displayName.toLowerCase().replace(/(^\w|\s+\w)/g, str => str.toUpperCase()) : '';
 
     return html`
-    <!-- Required styles for MDC Web -->
-    <!-- TODO: Load once-->
-<!--    <link rel="stylesheet" href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css">-->
-    
     <div class="mdc-card prediction-card">
       <div class="mdc-card__primary-action prediction-card__primary-action" tabindex="0">
         <div class="mdc-card__media mdc-card__media--16-9" style="background-image: url(&quot;${thumbnail}&quot;);"></div>

@@ -7,52 +7,34 @@ import {store} from '../store.js';
 import './classifier-image.js';
 import '@polymer/paper-spinner/paper-spinner-lite.js'
 
-import {fetchPrediction} from '../actions/prediction.js';
+import {fetchPrediction, removePrediction} from '../actions/prediction.js';
 import {prediction, predictionSelector} from '../reducers/prediction.js';
+import {MwcStyle} from "./mwc-style.js";
+import {formatDate} from "../utils.js";
+import {updateLocationURL} from "../actions/app";
 
-// We are lazy loading its reducer.
 store.addReducers({
   prediction
 });
 
 class ClassifierPrediction extends connect(store)(PageViewElement) {
   static get styles() {
-    return [css`
+    return [
+      MwcStyle,
+      css`
       :host {
         display: block;
       }
       
-      .container {
-        display: flex;
-        width: 70vw;
-        margin: 16px auto;
-        flex-wrap: wrap;
-        justify-content: center;
-        flex-direction: column;
-        
-        color: #616161;
-        
-        flex-direction: column;
-        box-sizing: border-box;
-      }
-      
-      .image-container {
+      .card-container {
         position: relative;
         height: 512px;
         width: 100%;
         max-width: 800px;
-        margin: auto;
+        margin: 16px auto;
       }
       
-      classifier-image {
-        width: 100%;
-        height: 100%;
-        position: absolute;
-        top: 0;
-        left: 0;
-      }
-      
-      classifier-image[loading] {
+      [loading] {
         opacity: 0.25;
       }
       
@@ -66,18 +48,8 @@ class ClassifierPrediction extends connect(store)(PageViewElement) {
         z-index: 1;
       }
       
-      .image-name {
-        font-size: .8em;
-        font-weight: bold;
-        overflow: hidden;
-        padding-top: 4px;
-        text-align: center;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-      }
-      
       .prediction-lists {
-        margin: 16px auto;
+        margin: auto;
         font-size: 1em;
       }
       
@@ -115,6 +87,34 @@ class ClassifierPrediction extends connect(store)(PageViewElement) {
         text-align: right;
       }
       
+     .prediction-card {
+        width: 100%
+      }
+      
+      .prediction-card__primary {
+        padding: 1rem;
+      }
+      
+      .prediction-card__secondary {
+        padding: 0 1rem 8px;
+      }
+      
+      .prediction-card__title, .prediction-card__subtitle {
+        margin: 0;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;  
+      }
+      
+      .prediction-card__subtitle {
+        color: var(--mdc-theme-text-secondary-on-background,rgba(0,0,0,.54));
+      }
+      
+      .back-btn {
+        margin: 4px;
+      }
+      
       [hidden] {
         display: none !important;
       }
@@ -133,37 +133,60 @@ class ClassifierPrediction extends connect(store)(PageViewElement) {
     }
 
     const item = this._item ? this._item : null;
-    const isFetching = item ? item.isFetching : false;
+    const id = item && item.id ? item.id : '';
+    const date = (item && item.timestamp && (Number.isInteger(item.timestamp))) ? formatDate(item.timestamp) : '';
+
     const imageUrl = item ? item.imageUrl : '';
-    const imageName = item ? item.fileName : '';
-    const result = (item && item.result) ? item.result : [];
+    const fileName = item ? item.fileName : '';
+
+    const result = (item && item.result && item.result[0]) ? item.result : [];
 
     return html`
-    <div class="container">
-      <div class="image-container">
-        <classifier-image class="image" alt="Prediction image" center src="${imageUrl}" placeholder="" ?loading="${isFetching}"></classifier-image>
-        <paper-spinner-lite class="spinner" ?active="${isFetching}"></paper-spinner-lite>
-      </div>
-      <div class="image-name">${imageName}</div>
-      <div class="prediction-lists" ?hidden="${isFetching}">
-        ${repeat(result, item => {
+    <div class="card-container">
+      <div class="mdc-card prediction-card" ?loading="${this._isFetching}">
+        <div class="mdc-card__action-buttons">
+            <a href="/predictions" class="mdc-button mdc-card__action back-btn">Back</a>
+        </div>
+        <div class="mdc-card__primary-action prediction-card__primary-action" tabindex="0">
+          <div class="mdc-card__media mdc-card__media--16-9" style="background-image: url(&quot;${imageUrl}&quot;);"></div>
+          <div class="prediction-card__primary">
+            <h2 class="prediction-card__title mdc-typography mdc-typography--headline6">${id}</h2>
+            <h3 class="prediction-card__subtitle mdc-typography mdc-typography--subtitle2">${date}</h3>
+          </div>
+          <div class="prediction-card__secondary mdc-typography mdc-typography--body2">
+              <div class="prediction-lists" ?hidden="${this._isFetching}">
+              ${repeat(result, item => {
 
       const classification = item.classification;
       const score = classification ? Math.round(item.classification.score * 100) : 0;
       const displayName = item.displayName ? item.displayName : '';
 
       return html`
-          <div class="prediction-list-item">
-            <div class="prediction-text">${displayName}</div>
-            <div class="prediction-score">${score}%</div>
-            <div class="prediction-meter">
-              <span class="prediction-meter-fill" style="width: ${score}%">
-              </span>
+                    <div class="prediction-list-item">
+                      <div class="prediction-text">${displayName}</div>
+                      <div class="prediction-score">${score}%</div>
+                      <div class="prediction-meter">
+                        <span class="prediction-meter-fill" style="width: ${score}%">
+                        </span>
+                      </div>
+                    </div>
+                  `
+    })}
             </div>
           </div>
-        `
-    })}
+        </div>
+        <div class="mdc-card__actions">
+          <div class="mdc-card__action-buttons">
+            <button class="mdc-button mdc-card__action mdc-card__action--button"
+              @click="${() => console.log('generating pdf')}">Generate PDF</button>
+          </div>
+           <div class="mdc-card__action-buttons">
+            <button class="mdc-button mdc-card__action mdc-card__action--button"
+              @click="${() => this._remove(id)}">Remove</button>
+          </div>
+        </div>
       </div>
+      <paper-spinner-lite class="spinner" ?active="${this._isFetching}"></paper-spinner-lite>
     </div>
     `;
   }
@@ -171,11 +194,18 @@ class ClassifierPrediction extends connect(store)(PageViewElement) {
   static get properties() {
     return {
       _item: {type: Object},
+      _isFetching: {type: Boolean}
     };
+  }
+
+  _remove(id) {
+    store.dispatch(removePrediction(id));
+    store.dispatch(updateLocationURL('/predictions'));
   }
 
   stateChanged(state) {
     this._item = predictionSelector(state);
+    this._isFetching = state.prediction.isFetching;
   }
 }
 

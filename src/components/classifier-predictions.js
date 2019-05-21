@@ -3,7 +3,6 @@ import {PageViewElement} from './page-view-element.js';
 import {repeat} from 'lit-html/directives/repeat.js';
 import {connect} from 'pwa-helpers/connect-mixin.js';
 
-// TODO: Create prediction item for list
 import './prediction-item.js';
 
 import {store} from '../store.js';
@@ -15,7 +14,7 @@ store.addReducers({
   predictions
 });
 
-class ClassifierExplore extends connect(store)(PageViewElement) {
+class ClassifierPredictions extends connect(store)(PageViewElement) {
   static get styles() {
     return [
       css`
@@ -32,7 +31,7 @@ class ClassifierExplore extends connect(store)(PageViewElement) {
       }
       
       prediction-item  {
-        width: 32%;
+        width: 23%;
         padding: 8px;
       }
       
@@ -41,12 +40,21 @@ class ClassifierExplore extends connect(store)(PageViewElement) {
         text-align: center;
       }
       
-       @media screen and (max-width: 1072px) {
+      /* 3 per row */
+      @media screen and (max-width: 1372px) {
+          prediction-item {
+            width: 32%;
+        }
+      }
+      
+      /* 2 per row*/
+      @media screen and (max-width: 1072px) {
           prediction-item {
             width: 48%;
         }
       }
       
+      /* 1 per row */
       @media screen and (max-width: 400px) {
           .predictions {
             width: 90%;
@@ -61,14 +69,15 @@ class ClassifierExplore extends connect(store)(PageViewElement) {
   }
 
   render() {
+    const hasItems = this._items && this._items.length > 0;
     return html`
         <div ?hidden="${this._showOffline}">
-          <div class="predictions" ?hidden="${!this._model}">
+          <div class="predictions" ?hidden="${!hasItems}">
               ${repeat(this._items, item => html`
                 <prediction-item .item="${item}"></prediction-item>
               `)}
           </div>
-          <div class="predictions-desc" ?hidden="${this._model}">You will find your prediction results here. Select which model to show predictions for.</div>
+          <div class="predictions-desc" ?hidden="${hasItems}">You will find your prediction results here.</div>
         </div>
         <!-- TODO: Show refresh button when _showOffline is true-->
     `;
@@ -76,19 +85,17 @@ class ClassifierExplore extends connect(store)(PageViewElement) {
 
   static get properties() {
     return {
-      _model: {type: String},
       _items: {type: Array},
       _showOffline: { type: Boolean }
     }
   }
 
   stateChanged(state) {
-    this._model = state.predictions.model;
     this._items = itemListSelector(state);
     this._showOffline = (state.app.offline && state.predictions.failure) || !state.user.currentUser;
   }
 }
 
-window.customElements.define('classifier-explore', ClassifierExplore);
+window.customElements.define('classifier-predictions', ClassifierPredictions);
 
 export {fetchPredictions}
