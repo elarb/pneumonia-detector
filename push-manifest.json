@@ -5,7 +5,7 @@
       "type": "script",
       "weight": 1
     },
-    "src/components/classifier-home.js": {
+    "src/components/classifier-predict.js": {
       "crossorigin": "anonymous",
       "type": "script",
       "weight": 1
@@ -15,29 +15,13 @@
       "weight": 1
     }
   },
-  "/home": {
+  "/predict": {
     "src/components/classifier-app.js": {
       "crossorigin": "anonymous",
       "type": "script",
       "weight": 1
     },
-    "src/components/classifier-home.js": {
-      "crossorigin": "anonymous",
-      "type": "script",
-      "weight": 1
-    },
-    "node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js": {
-      "type": "script",
-      "weight": 1
-    }
-  },
-  "/about": {
-    "src/components/classifier-app.js": {
-      "crossorigin": "anonymous",
-      "type": "script",
-      "weight": 1
-    },
-    "src/components/classifier-about.js": {
+    "src/components/classifier-predict.js": {
       "crossorigin": "anonymous",
       "type": "script",
       "weight": 1
@@ -63,13 +47,45 @@
       "weight": 1
     }
   },
-  "/explore": {
+  "/predictions": {
     "src/components/classifier-app.js": {
       "crossorigin": "anonymous",
       "type": "script",
       "weight": 1
     },
-    "src/components/classifier-explore.js": {
+    "src/components/classifier-predictions.js": {
+      "crossorigin": "anonymous",
+      "type": "script",
+      "weight": 1
+    },
+    "node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js": {
+      "type": "script",
+      "weight": 1
+    }
+  },
+  "/train": {
+    "src/components/classifier-app.js": {
+      "crossorigin": "anonymous",
+      "type": "script",
+      "weight": 1
+    },
+    "src/components/classifier-train.js": {
+      "crossorigin": "anonymous",
+      "type": "script",
+      "weight": 1
+    },
+    "node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js": {
+      "type": "script",
+      "weight": 1
+    }
+  },
+  "/feedback": {
+    "src/components/classifier-app.js": {
+      "crossorigin": "anonymous",
+      "type": "script",
+      "weight": 1
+    },
+    "src/components/classifier-feedback.js": {
       "crossorigin": "anonymous",
       "type": "script",
       "weight": 1
@@ -79,5 +95,4 @@
       "weight": 1
     }
   }
-
 }
