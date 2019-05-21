@@ -42,8 +42,6 @@ class ClassifierApp extends connect(store)(LitElement) {
       _snackbarOpened: {type: Boolean},
       _offline: {type: Boolean},
       _user: {type: Object},
-      _model: {type: String},
-      _predId: {type: String}
     };
   }
 
@@ -58,7 +56,7 @@ class ClassifierApp extends connect(store)(LitElement) {
           --app-header-height: 64px;
           --app-footer-height: 104px;
           /* The 1px is to make the scrollbar appears all the time */
-          --app-main-content-min-height: calc(100vh - var(--app-header-height) - var(--app-footer-height));
+          --app-main-content-min-height: calc(100vh - var(--app-header-height) - var(--app-footer-height) + 1px);
 
           --app-primary-color: #42a5f5;
           --app-secondary-color: #80d6ff;
@@ -88,6 +86,7 @@ class ClassifierApp extends connect(store)(LitElement) {
 
         .toolbar-top {
           background-color: var(--app-header-background-color);
+          justify-content: space-between;
         }
 
         [main-title] > a {
@@ -101,13 +100,30 @@ class ClassifierApp extends connect(store)(LitElement) {
           display: inline-block;
         }
         
+       .toolbar-list {
+          display: none;
+        }
+
+        .toolbar-list > a {
+          display: inline-block;
+          color: var(--app-header-text-color);
+          text-decoration: none;
+          line-height: 30px;
+          padding: 4px 24px;
+        }
+
+        .toolbar-list > a[selected] {
+          border-bottom: 4px solid var(--app-secondary-color);
+          font-weight: bold;
+        }
+        
         .logo {
           width: 128px;
         }
 
         .menu-btn,
         .back-btn,
-        .signin-btn {
+        .avatar {
           display: inline-block;
           width: 44px;
           height: 44px;
@@ -120,11 +136,11 @@ class ClassifierApp extends connect(store)(LitElement) {
           text-decoration: none;
         }
 
-        .signin-btn {
+        .avatar {
           padding: 2px;
         }
   
-        .signin-btn > img {
+        .avatar > img {
           width: 36px;
           height: 36px;
           border-radius: 50%;
@@ -181,6 +197,27 @@ class ClassifierApp extends connect(store)(LitElement) {
           text-align: center;
         }
         
+        
+        /* Wide layout: when the viewport width is bigger than 800px, layout
+        changes to a wide layout */
+        @media (min-width: 800px) {
+          .toolbar-list {
+            display: block;
+            padding-right: 64px;
+          }
+
+          .menu-btn {
+            display: none;
+          }
+
+          /* The drawer button isn't shown in the wide layout, so we don't
+          need to offset the title */
+          [main-title] {
+            max-width: 128px;
+            padding-left: 16px;
+          }
+        }
+        
        [hidden] {
           display: none !important;
        }
@@ -191,20 +228,27 @@ class ClassifierApp extends connect(store)(LitElement) {
   render() {
     const hideMenuBtn = this._page === 'prediction';
 
-    const backHref = this._page === 'prediction' ? `/explore?model=${this._model}` : `/prediction/${this._predId}`;
-
     return html`
       <!-- Header -->
       <app-header condenses reveals effects="waterfall">
         <app-toolbar class="toolbar-top">
           <button class="menu-btn" title="Menu" ?hidden="${hideMenuBtn}" @click="${this._menuButtonClicked}">${menuIcon}</button>
-          <a class="back-btn" aria-label="Go back" ?hidden="${!hideMenuBtn}" href="${backHref}">${backIcon}</a>
           <div main-title><a href="/" aria-label="Go to home"><img class="logo" src="images/logo.svg" alt="Logo"></a></div>
-          <button class="signin-btn" aria-label="Sign In" title="${this._user ? 'Sign Out' : 'Sign In'}"
-              @click="${() => this._user ? this._signOut() : this._signIn()}">
+          
+          <!-- This gets hidden on a small screen-->
+          <nav class="toolbar-list">
+            <a ?selected="${this._page === 'predict'}" href="/predict">Predict</a>
+            <a ?selected="${this._page === 'predictions'}" href="/predictions">Predictions</a>
+            <a ?selected="${this._page === 'train'}" href="/train">Train</a>
+            <a ?selected="${this._page === 'feedback'}" href="/feedback">Feedback</a>
+          </nav>
+          
+          <button class="avatar" aria-label="Avatar"
+            @click="${() => this._user && this._signOut()}">
             ${this._user && this._user.photoURL ? html`<img src="${this._user.photoURL}">` : accountIcon}
           </button>
         </app-toolbar>
+        
       </app-header>
 
       <!-- Drawer content -->
@@ -212,18 +256,20 @@ class ClassifierApp extends connect(store)(LitElement) {
           .opened="${this._drawerOpened}"
           @opened-changed="${this._drawerOpenedChanged}">
         <nav class="drawer-list">
-          <a ?selected="${this._page === 'home'}" href="/home">Home</a>
-          <a ?selected="${this._page === 'explore'}" href="/explore?model=${this._model}">Explore</a>
-          <a ?selected="${this._page === 'about'}" href="/about">About</a>
+          <a ?selected="${this._page === 'predict'}" href="/predict">Predict</a>
+          <a ?selected="${this._page === 'predictions'}" href="/predictions">Predictions</a>
+          <a ?selected="${this._page === 'train'}" href="/train">Train</a>
+          <a ?selected="${this._page === 'feedback'}" href="/feedback">Feedback</a>
         </nav>
       </app-drawer>
 
       <!-- Main content -->
       <main role="main" class="main-content">
-        <classifier-home class="page" ?active="${this._page === 'home'}"></classifier-home>
+        <classifier-predict class="page" ?active="${this._page === 'predict'}"></classifier-predict>
         <classifier-prediction class="page" ?active="${this._page === 'prediction'}"></classifier-prediction>
-        <classifier-explore class="page" ?active="${this._page === 'explore'}"></classifier-explore>
-        <classifier-about class="page" ?active="${this._page === 'about'}"></classifier-about>
+        <classifier-predictions class="page" ?active="${this._page === 'predictions'}"></classifier-predictions>
+        <classifier-train class="page" ?active="${this._page === 'train'}"></classifier-train>
+        <classifier-feedback class="page" ?active="${this._page === 'feedback'}"></classifier-feedback>
         <classifier-view404 class="page" ?active="${this._page === 'view404'}"></classifier-view404>
       </main>
 
@@ -302,8 +348,6 @@ class ClassifierApp extends connect(store)(LitElement) {
     this._snackbarOpened = state.app.snackbarOpened;
     this._drawerOpened = state.app.drawerOpened;
     this._user = state.user.currentUser;
-    this._model = state.predictions && state.predictions.model || '';
-    this._predId = state.prediction && state.prediction.id;
   }
 }
 
