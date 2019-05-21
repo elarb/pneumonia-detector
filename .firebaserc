@@ -1,0 +1,14 @@
+{
+  "projects": {
+    "default": "pupilflow-240709"
+  },
+  "targets": {
+    "pupilflow-240709": {
+      "hosting": {
+        "classifier": [
+          "pneumonia"
+          ]
+      }
+    }
+  }
+}

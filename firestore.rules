@@ -1,0 +1,9 @@
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /predictions/{predictionId} {
+      // Let it go through if resource doesn't exist
+      allow read, update, delete: if resource == null || (request.auth.uid == resource.data.userId);
+      allow create: if request.auth.uid != null;
+    }
+  }
+}
