@@ -1,5 +1,5 @@
 // Adopted from https://gist.github.com/kaizhu256/4482069
-let uuid4 = () => {
+export const uuid4 = () => {
   let uuid = '', ii;
   for (ii = 0; ii < 32; ii += 1) {
     switch (ii) {
@@ -23,4 +23,8 @@ let uuid4 = () => {
   return uuid;
 };
 
-export {uuid4}
+export const formatDate = (timestamp) => {
+  timestamp -= (new Date().getTimezoneOffset() * 60000);
+  return new Date(timestamp).toISOString().replace(/T/, ' ').replace(/\..+/, '');
+};
+
