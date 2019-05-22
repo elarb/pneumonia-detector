@@ -189,9 +189,9 @@ class ClassifierPrediction extends connect(store)(PageViewElement) {
         <div class="mdc-card__actions">
           <div class="mdc-card__action-buttons">
             <button class="mdc-button mdc-card__action mdc-card__action--button"
+              @click="${() => this._downloadAsJson()}">Download Json</button>
+            <button ?disabled="${item.isPublic}" class="mdc-button mdc-card__action mdc-card__action--button"
               @click="${() => console.log('generating pdf')}">Generate PDF</button>
-          </div>
-           <div class="mdc-card__action-buttons">
             <button ?disabled="${item.isPublic}" class="mdc-button mdc-card__action mdc-card__action--button"
               @click="${() => this._remove(id)}">Remove</button>
           </div>
@@ -217,6 +217,22 @@ class ClassifierPrediction extends connect(store)(PageViewElement) {
   stateChanged(state) {
     this._item = predictionSelector(state);
     this._isFetching = state.prediction.isFetching;
+  }
+
+  _downloadAsJson() {
+    if (!this._item) {
+      return;
+    }
+    let el = document.createElement('a');
+    el.setAttribute('href', 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(this._item)));
+    el.setAttribute('download', this._item.id);
+
+    el.style.display = 'none';
+    document.body.appendChild(el);
+
+    el.click();
+
+    document.body.removeChild(el);
   }
 }
 
