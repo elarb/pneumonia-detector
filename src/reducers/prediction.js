@@ -1,7 +1,7 @@
 import {createSelector} from 'reselect';
 import {itemsSelector} from './predictions.js';
 import {
-  REQUEST_PREDICTION, RECEIVE_PREDICTION, FAIL_PREDICTION
+  REQUEST_PREDICTION, RECEIVE_PREDICTION, FAIL_PREDICTION, REMOVE_PREDICTION
 } from '../actions/prediction.js';
 
 
@@ -27,6 +27,11 @@ export const prediction = (state = {}, action) => {
         failure: true,
         isFetching: false,
         error: action.error
+      };
+    case REMOVE_PREDICTION:
+      return {
+        ...state,
+        item: {},
       };
     default:
       return state;

@@ -1,7 +1,8 @@
 import {LitElement, html, css} from 'lit-element';
 
 import './classifier-image.js';
-import {MwcStyle} from "./mwc-style";
+import {MwcStyle} from "./mwc-style.js";
+import {tsToDate, toTitleCase} from "../utils.js";
 
 class PredictionItem extends LitElement {
   static get styles() {
@@ -13,7 +14,7 @@ class PredictionItem extends LitElement {
       }
       
       .prediction-card {
-        width: 100%px;
+        width: 100%;
       }
       
       .prediction-card__primary {
@@ -38,15 +39,16 @@ class PredictionItem extends LitElement {
       
       .confidence-score {
         width: 32px;
-        height: 20px;
+        /* height: 24px;*/
+        height: 8px;
         position: absolute;
         bottom: 0;
         right: 0;
         margin: 4px;
         border-radius: 4px;
         text-align: center;
-        color: #3c3c3c;
-        font-weight: 600;
+        color: white;
+        font-weight: 500;
       }
 
       [hidden] {
@@ -58,9 +60,8 @@ class PredictionItem extends LitElement {
 
   render() {
     const item = this.item ? this.item : null;
-    const id = item ? item.predId : '';
-    const date = (item && item.timestamp && (Number.isInteger(item.timestamp))) ?
-      new Date(item.timestamp).toISOString().replace(/T/, ' ').replace(/\..+/, '') : '';
+    const id = item && item.id ? item.id : '';
+    const date = (item && item.timestamp && (Number.isInteger(item.timestamp))) ? tsToDate(item.timestamp) : '';
 
     const thumbnail = item ? item.thumbUrl : null;
     const fileName = item ? item.fileName : '';
@@ -69,13 +70,9 @@ class PredictionItem extends LitElement {
 
     const hasScore = result && result.classification && result.classification.score;
     const score = hasScore ? Math.round(result.classification.score * 100) : 0;
-    const displayName = result ? result.displayName.toLowerCase().replace(/(^\w|\s+\w)/g, str => str.toUpperCase()) : '';
+    const displayName = result ? toTitleCase(result.displayName) : '';
 
     return html`
-    <!-- Required styles for MDC Web -->
-    <!-- TODO: Load once-->
-<!--    <link rel="stylesheet" href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css">-->
-    
     <div class="mdc-card prediction-card">
       <div class="mdc-card__primary-action prediction-card__primary-action" tabindex="0">
         <div class="mdc-card__media mdc-card__media--16-9" style="background-image: url(&quot;${thumbnail}&quot;);"></div>
@@ -84,7 +81,7 @@ class PredictionItem extends LitElement {
           <h3 class="prediction-card__subtitle mdc-typography mdc-typography--subtitle2">${date}</h3>
         </div>
         <div class="prediction-card__secondary mdc-typography mdc-typography--body2">Result: ${displayName}</div>
-        <div class="confidence-score" style="background-color: ${[[PredictionItem._computeConfidenceColor(score)]]};" title="confidence score">${score}</div>
+        <div class="confidence-score" style="background-color: ${PredictionItem._colorFromLabel(result.displayName)};" title="confidence score"></div>
       </div>
       <div class="mdc-card__actions">
         <div class="mdc-card__action-buttons">
@@ -101,8 +98,13 @@ class PredictionItem extends LitElement {
     }
   }
 
-  // https://stackoverflow.com/a/17268489/7390720
-  static _computeConfidenceColor(score) {
+  static _colorFromLabel(label) {
+    const RED = "#dd4444";
+    const GREEN = "#7eee72";
+    return label === 'PNEUMONIA' || '' ? RED : GREEN;
+  }
+
+  static _colorFromGradient(score) {
     if (!score) {
       return;
     }

@@ -1,14 +1,15 @@
 export const REQUEST_PREDICTIONS = 'REQUEST_PREDICTIONS';
 export const RECEIVE_PREDICTIONS = 'RECEIVE_PREDICTIONS';
 export const FAIL_PREDICTIONS = 'FAIL_PREDICTIONS';
+export const ADD_PREDICTION = 'ADD_PREDICTION';
+export const REMOVE_PREDICTION = 'REMOVE_PREDICTION';
 
-// fetch predictions by query (different models)
-export const fetchPredictions = (model) => (dispatch, getState) => {
-  if (!shouldFetchPredictions(getState(), model)) {
+export const fetchPredictions = () => (dispatch, getState) => {
+  if (!shouldFetchPredictions(getState())) {
     return;
   }
 
-  dispatch(requestPredictions(model));
+  dispatch(requestPredictions());
 
   // wait for auth change
   firebase.auth().onAuthStateChanged(user => {
@@ -16,46 +17,67 @@ export const fetchPredictions = (model) => (dispatch, getState) => {
       return;
     }
 
-    let query = firebase.firestore().collection("predictions").where("userId", "==", user.uid);
-
-    if (model) {
-      query = query.where("model", "==", model);
+    let query = firebase.firestore().collection("predictions");
+    // fetch public predictions for quest accounts
+    if (user.isAnonymous) {
+      query = query.where("isPublic", "==", true).limit(50);
+    } else if (user && user.uid) {
+      query = query.where("userId", "==", user.uid);
+    } else {
+      dispatch(failPredictions());
+      return;
     }
 
     query.get()
       .then(querySnapshot => {
-        dispatch(receivePredictions(model, querySnapshot.docs.map(d => d.data())));
+        let preds = querySnapshot.docs.map(d => d.data());
+        preds = preds.reduce((obj, item) => {
+          obj[item.id] = item;
+          return obj
+        }, {});
+        dispatch(receivePredictions(preds));
       })
       .catch(error => {
-        dispatch(failPredictions(model, error));
+        dispatch(failPredictions(error));
       });
   });
 
 };
 
-const shouldFetchPredictions = (state, model) => {
-  return state.predictions.failure || state.predictions.model !== model && !state.predictions.isFetching;
+const shouldFetchPredictions = (state) => {
+  return state.predictions && !state.predictions.isFetching && !state.predictions.items;
 };
 
-const requestPredictions = (model) => {
+const requestPredictions = () => {
   return {
-    type: REQUEST_PREDICTIONS,
-    model
+    type: REQUEST_PREDICTIONS
   };
 };
 
-const receivePredictions = (model, items) => {
+const receivePredictions = (items) => {
   return {
     type: RECEIVE_PREDICTIONS,
-    model,
     items
   };
 };
 
-const failPredictions = (model, error) => {
+const failPredictions = (error) => {
   return {
     type: FAIL_PREDICTIONS,
-    model,
     error
   };
+};
+
+export const addPredictionList = (item) => {
+  return {
+    type: ADD_PREDICTION,
+    item
+  }
+};
+
+export const removePredictionList = (id) => {
+  return {
+    type: REMOVE_PREDICTION,
+    id
+  }
 };

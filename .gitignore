@@ -6,3 +6,7 @@ _site/
 
 .firebase/
 firebase-debug.log
+.idea/
+
+# Image folder is being generated
+/images

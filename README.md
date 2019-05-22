@@ -1,14 +1,14 @@
 # Pneumonia Detector
 
 TODO:
-- [ ] Add remove button
+- [X] Add remove button
 - [ ] Add search bar
 - [ ] Add logout button
-- [ ] Remove signin in from top button 
-- [ ] Improve flow: start at predictions page
-- [ ] Improve detail page (arrows to navigate to next prediction?)
+- [X] Remove signin in from top button 
+- [X] Improve detail page (arrows to navigate to next prediction?)
 - [ ] Image placeholders for predictions cards
-- [ ] Import mwc style globally  
+- [X] Import mwc style globally
+- [ ] Use Layout Grid  
 
 Firestore:
 - [ ] Limit usage

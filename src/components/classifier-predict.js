@@ -4,8 +4,10 @@ import {connect} from 'pwa-helpers/connect-mixin.js';
 
 import '@vaadin/vaadin-upload/vaadin-upload.js';
 import './classifier-image.js';
+import {SharedStyles} from "./shared-styles.js";
+
 import {uuid4} from "../utils.js";
-// This element is connected to the Redux store.
+
 import {store} from '../store.js';
 import {prediction} from '../reducers/prediction.js';
 import {updateLocationURL} from "../actions/app.js";
@@ -13,7 +15,7 @@ import {listenPrediction} from "../actions/prediction.js";
 
 store.addReducers({prediction});
 
-class ClassifierHome extends connect(store)(PageViewElement) {
+class ClassifierPredict extends connect(store)(PageViewElement) {
   static get properties() {
     return {
       _page: {type: String},
@@ -23,14 +25,15 @@ class ClassifierHome extends connect(store)(PageViewElement) {
 
   static get styles() {
     return [
+      SharedStyles,
       css`
       :host {
         display: block;
       }
 
       .classifier-bg {
-        height: 300px;
-        max-width: 570px;
+        height: 336px;
+        max-width: 608px;
         margin: 16px auto;
       }
 
@@ -52,6 +55,10 @@ class ClassifierHome extends connect(store)(PageViewElement) {
       
       .upload-field {
         display: block;
+      }
+      
+      #firebaseui-auth-container {
+        margin-top: 48px;
       }
       
       [hidden] {
@@ -77,13 +84,18 @@ class ClassifierHome extends connect(store)(PageViewElement) {
   }
 
   render() {
+    const isAnonymous = this._user && this._user.isAnonymous;
+    const maxFiles = isAnonymous ? 0 : 1;
     return html`
       <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/4.0.0/firebaseui.css" />
-      <classifier-image class="classifier-bg" alt="Pneumonia Detector Home" center src="images/xray-bg.jpg" placeholder=""></classifier-image>
+      <classifier-image class="classifier-bg" alt="Pneumonia Detector Image" center src="images/xray-bg.jpg" placeholder=""></classifier-image>
       <div class="classifier-desc">Detect cases of Pneumonia by uploading chest X-ray images.</div>
       <div class="upload-field" ?hidden="${!this._user}">
-        <p class="img-req">Maximum file size is 1.5MB. Supported formats: JPEG, PNG, GIF</p>
-        <vaadin-upload id="upload" max-files="1" accept="image/jpeg, image/png, image/gif" max-file-size="1500000">
+        <div class="img-req">
+          <p ?hidden="${isAnonymous}">Maximum file size is 1.5MB. Supported formats: JPEG, PNG, GIF.</p>
+          <p ?hidden="${!isAnonymous}">Guest users can't add or remove predictions, but can view <a href="/predictions">publicly available predictions</a>.</p>
+        </div>
+        <vaadin-upload id="upload" max-files="${maxFiles}" accept="image/jpeg, image/png, image/gif" max-file-size="1500000">
         </vaadin-upload>
       </div>
       <div id="firebaseui-auth-container" ?hidden="${this._user}"></div>
@@ -118,9 +130,7 @@ class ClassifierHome extends connect(store)(PageViewElement) {
 
     const predId = uuid4();
 
-    // TODO: Make user pick a model
-    const model = 'pneumonia';
-    const path = `user/uploads/${this._user.uid}/${model}/${predId}/${file.name}`;
+    const path = `user/uploads/${this._user.uid}/pneumonia/${predId}/${file.name}`;
 
     let imgRef = storageRef.child(path);
     let uploadTask = imgRef.put(file);
@@ -155,6 +165,8 @@ class ClassifierHome extends connect(store)(PageViewElement) {
       file.complete = true;
       this.vaadinUpload._notifyFileChanges(file);
       store.dispatch(updateLocationURL(`/prediction/${predId}`));
+      // Clear the fi;es
+      this.vaadinUpload.files = [];
     });
   }
 
@@ -178,9 +190,10 @@ class ClassifierHome extends connect(store)(PageViewElement) {
       signInOptions: [
         // Leave the lines as is for the providers you want to offer your users.
         firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-        firebase.auth.GithubAuthProvider.PROVIDER_ID,
+        // firebase.auth.GithubAuthProvider.PROVIDER_ID,
         firebaseui.auth.AnonymousAuthProvider.PROVIDER_ID
       ],
+      credentialHelper: firebaseui.auth.CredentialHelper.GOOGLE_YOLO,
       // tosUrl and privacyPolicyUrl accept either url string or a callback function.
       // Terms of service url/callback.
       tosUrl: 'pneumonia.wep.app/tos',
@@ -197,4 +210,4 @@ class ClassifierHome extends connect(store)(PageViewElement) {
   }
 }
 
-window.customElements.define('classifier-home', ClassifierHome);
+window.customElements.define('classifier-predict', ClassifierPredict);
