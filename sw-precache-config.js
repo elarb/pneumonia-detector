@@ -2,6 +2,7 @@ module.exports = {
   staticFileGlobs: [
     'manifest.json',
     'src/**/*',
+    'images/*',
   ],
   runtimeCaching: [
     {
@@ -16,5 +17,6 @@ module.exports = {
       urlPattern: /.*googleusercontent\.com.*/,
       handler: 'fastest'
     }
-  ]
+  ],
+  navigateFallbackWhitelist: [/^(?!\/__).*/]
 };
