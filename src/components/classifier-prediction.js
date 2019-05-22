@@ -115,6 +115,10 @@ class ClassifierPrediction extends connect(store)(PageViewElement) {
         margin: 4px;
       }
       
+      .result-text {
+        padding-top: 16px;
+      }
+      
       [hidden] {
         display: none !important;
       }
@@ -141,6 +145,10 @@ class ClassifierPrediction extends connect(store)(PageViewElement) {
     const fileName = item ? item.fileName : '';
 
     const result = (item && item.result && item.result[0]) ? item.result : [];
+    const classification = result[0].classification;
+    const confidence = classification ? classification.score.toFixed(3) : 0;
+
+    const resultText = result ? `This case is classified as '${result[0].displayName}' with a confidence score of ${confidence}` : '';
 
     return html`
     <div class="card-container">
@@ -159,21 +167,22 @@ class ClassifierPrediction extends connect(store)(PageViewElement) {
               ${repeat(result, item => {
 
       const classification = item.classification;
-      const score = classification ? Math.round(item.classification.score * 100) : 0;
+      const score = classification ? classification.score.toFixed(3) : 0;
       const displayName = item.displayName ? item.displayName : '';
 
       return html`
                     <div class="prediction-list-item">
                       <div class="prediction-text">${displayName}</div>
-                      <div class="prediction-score">${score}%</div>
+                      <div class="prediction-score">${score}</div>
                       <div class="prediction-meter">
-                        <span class="prediction-meter-fill" style="width: ${score}%">
+                        <span class="prediction-meter-fill" style="width: ${score * 100}%">
                         </span>
                       </div>
                     </div>
                   `
     })}
             </div>
+            <div class="result-text">${resultText}</div>
           </div>
         </div>
         <div class="mdc-card__actions">
@@ -182,7 +191,7 @@ class ClassifierPrediction extends connect(store)(PageViewElement) {
               @click="${() => console.log('generating pdf')}">Generate PDF</button>
           </div>
            <div class="mdc-card__action-buttons">
-            <button class="mdc-button mdc-card__action mdc-card__action--button"
+            <button ?disabled="${item.isPublic}" class="mdc-button mdc-card__action mdc-card__action--button"
               @click="${() => this._remove(id)}">Remove</button>
           </div>
         </div>

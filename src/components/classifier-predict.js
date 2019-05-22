@@ -4,8 +4,10 @@ import {connect} from 'pwa-helpers/connect-mixin.js';
 
 import '@vaadin/vaadin-upload/vaadin-upload.js';
 import './classifier-image.js';
+import {SharedStyles} from "./shared-styles.js";
+
 import {uuid4} from "../utils.js";
-// This element is connected to the Redux store.
+
 import {store} from '../store.js';
 import {prediction} from '../reducers/prediction.js';
 import {updateLocationURL} from "../actions/app.js";
@@ -23,6 +25,7 @@ class ClassifierPredict extends connect(store)(PageViewElement) {
 
   static get styles() {
     return [
+      SharedStyles,
       css`
       :host {
         display: block;
@@ -81,13 +84,18 @@ class ClassifierPredict extends connect(store)(PageViewElement) {
   }
 
   render() {
+    const isAnonymous = this._user && this._user.isAnonymous;
+    const maxFiles = isAnonymous ? 0 : 1;
     return html`
       <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/4.0.0/firebaseui.css" />
       <classifier-image class="classifier-bg" alt="Pneumonia Detector Image" center src="images/xray-bg.jpg" placeholder=""></classifier-image>
       <div class="classifier-desc">Detect cases of Pneumonia by uploading chest X-ray images.</div>
       <div class="upload-field" ?hidden="${!this._user}">
-        <p class="img-req">Maximum file size is 1.5MB. Supported formats: JPEG, PNG, GIF</p>
-        <vaadin-upload id="upload" max-files="1" accept="image/jpeg, image/png, image/gif" max-file-size="1500000">
+        <div class="img-req">
+          <p ?hidden="${isAnonymous}">Maximum file size is 1.5MB. Supported formats: JPEG, PNG, GIF.</p>
+          <p ?hidden="${!isAnonymous}">Guest users can't add or remove predictions, but can view <a href="/predictions">publicly available predictions</a>.</p>
+        </div>
+        <vaadin-upload id="upload" max-files="${maxFiles}" accept="image/jpeg, image/png, image/gif" max-file-size="1500000">
         </vaadin-upload>
       </div>
       <div id="firebaseui-auth-container" ?hidden="${this._user}"></div>

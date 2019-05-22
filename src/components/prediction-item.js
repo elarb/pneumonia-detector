@@ -39,15 +39,16 @@ class PredictionItem extends LitElement {
       
       .confidence-score {
         width: 32px;
-        height: 24px;
+        /* height: 24px;*/
+        height: 8px;
         position: absolute;
         bottom: 0;
         right: 0;
         margin: 4px;
         border-radius: 4px;
         text-align: center;
-        color: #3c3c3c;
-        font-weight: 600;
+        color: white;
+        font-weight: 500;
       }
 
       [hidden] {
@@ -80,7 +81,7 @@ class PredictionItem extends LitElement {
           <h3 class="prediction-card__subtitle mdc-typography mdc-typography--subtitle2">${date}</h3>
         </div>
         <div class="prediction-card__secondary mdc-typography mdc-typography--body2">Result: ${displayName}</div>
-        <div class="confidence-score" style="background-color: ${[[PredictionItem._computeConfidenceColor(score)]]};" title="confidence score">${score}</div>
+        <div class="confidence-score" style="background-color: ${PredictionItem._colorFromLabel(result.displayName)};" title="confidence score"></div>
       </div>
       <div class="mdc-card__actions">
         <div class="mdc-card__action-buttons">
@@ -97,8 +98,13 @@ class PredictionItem extends LitElement {
     }
   }
 
-  // https://stackoverflow.com/a/17268489/7390720
-  static _computeConfidenceColor(score) {
+  static _colorFromLabel(label) {
+    const RED = "#dd4444";
+    const GREEN = "#7eee72";
+    return label === 'PNEUMONIA' || '' ? RED : GREEN;
+  }
+
+  static _colorFromGradient(score) {
     if (!score) {
       return;
     }
