@@ -68,13 +68,21 @@ exports.callCustomModel = async object => {
   const tempLocalDir = path.dirname(tempLocalFile);
   const tempLocalThumbFile = path.join(os.tmpdir(), thumbFilePath);
 
+  let isPublic;
+
   // Exit if this is triggered on a file that is not an image.
   if (!contentType.startsWith('image/')) {
     return console.log('This is not an image.');
   }
 
   // Exit if its not an upload
-  if (!filePath.startsWith('user/uploads/')) {
+  if (filePath.startsWith('user/uploads/')) {
+    isPublic = false;
+    console.log('private image uploaded');
+  } else if (filePath.startsWith('public/uploads')) {
+    isPublic = true;
+    console.log('public image uploaded');
+  } else {
     return console.log('Not an uploaded item');
   }
 
@@ -84,7 +92,12 @@ exports.callCustomModel = async object => {
   }
 
   // Get metadata
-  let [, , userId, model, predId, ,] = filePath.split(path.sep);
+  let userId, model, predId;
+  if (isPublic) {
+    [, , model, predId, ,] = filePath.split(path.sep);
+  } else {
+    [, , userId, model, predId, ,] = filePath.split(path.sep);
+  }
 
   const bucket = storage.bucket(fileBucket);
   const file = bucket.file(filePath);
@@ -113,11 +126,15 @@ exports.callCustomModel = async object => {
     // Get only the first prediction response
     result: response[0]['payload'],
     id: predId,
-    userId,
     model,
     fileName,
-    timestamp
+    timestamp,
+    isPublic
   };
+
+  if (userId) {
+    pred.userId = userId;
+  }
 
   // Generate a thumbnail using ImageMagick.
   await spawn('convert', [tempLocalFile, '-thumbnail', `${THUMB_MAX_WIDTH}x${THUMB_MAX_HEIGHT}>`, tempLocalThumbFile], {capture: ['stdout', 'stderr']});
