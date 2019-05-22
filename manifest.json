@@ -1,6 +1,6 @@
 {
   "name": "Pneumonia Detector App",
-  "short_name": "Pneumonia Detector",
+  "short_name": "Detector",
   "description": "Detect cases of Pneumonia by uploading chest X-ray images.",
   "start_url": "/",
   "display": "standalone",
