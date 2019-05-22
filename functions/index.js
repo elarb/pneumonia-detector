@@ -2,7 +2,7 @@ const functions = require('firebase-functions');
 const prpl = require('prpl-server');
 const express = require('express');
 const rendertron = require('rendertron-middleware');
-const {callCustomModel} = require("./triggers");
+const {callCustomModel} = require("./triggers.js");
 
 const app = express();
 
