@@ -21,7 +21,7 @@ class ClassifierFeedback extends PageViewElement {
       <section>
         <h2>Feedback</h2>
          <p> This app is developed by <a target="_blank" rel="noopener" href="https://pupilflow.com">PupilFlow</a>. 
-         Want to learn more or send feedback? Email me at <a href="mailto:contact@pupilflow.com">elias@pupilflow.com</a></p>
+         Want to learn more or send feedback? Email me at <a target="_blank" rel="noopener" href='&#109;&#97;&#105;lto&#58;elias&#64;p%75%7&#48;il%6&#54;&#108;o%7&#55;%2E&#37;63o&#37;6&#68;'>el&#105;as&#64;pupilfl&#111;w&#46;com</a></p>
       </section>
       <section>
         <h2>About</h2>
