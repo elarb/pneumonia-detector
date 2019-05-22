@@ -17,9 +17,15 @@ export const fetchPredictions = () => (dispatch, getState) => {
       return;
     }
 
-    firebase.firestore().collection("predictions")
-      .where("userId", "==", user.uid)
-      .get()
+    let query = firebase.firestore().collection("predictions");
+    // fetch public predictions for quest accounts
+    if (user.isAnonymous) {
+      query = query.where("isPublic", "==", true).limit(50);
+    } else {
+      query = query.where("userId", "==", user.uid);
+    }
+
+    query.get()
       .then(querySnapshot => {
         let preds = querySnapshot.docs.map(d => d.data());
         preds = preds.reduce((obj, item) => {
