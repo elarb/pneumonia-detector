@@ -189,11 +189,11 @@ class ClassifierPredict extends connect(store)(PageViewElement) {
       signInSuccessUrl: '/',
       signInOptions: [
         // Leave the lines as is for the providers you want to offer your users.
-        firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+        // firebase.auth.GoogleAuthProvider.PROVIDER_ID,
         // firebase.auth.GithubAuthProvider.PROVIDER_ID,
         firebaseui.auth.AnonymousAuthProvider.PROVIDER_ID
       ],
-      credentialHelper: firebaseui.auth.CredentialHelper.GOOGLE_YOLO,
+      // credentialHelper: firebaseui.auth.CredentialHelper.GOOGLE_YOLO,
       // tosUrl and privacyPolicyUrl accept either url string or a callback function.
       // Terms of service url/callback.
       tosUrl: 'pneumonia.wep.app/tos',
