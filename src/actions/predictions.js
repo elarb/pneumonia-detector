@@ -21,8 +21,11 @@ export const fetchPredictions = () => (dispatch, getState) => {
     // fetch public predictions for quest accounts
     if (user.isAnonymous) {
       query = query.where("isPublic", "==", true).limit(50);
-    } else {
+    } else if (user && user.uid) {
       query = query.where("userId", "==", user.uid);
+    } else {
+      dispatch(failPredictions());
+      return;
     }
 
     query.get()

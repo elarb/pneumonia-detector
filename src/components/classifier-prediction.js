@@ -144,11 +144,12 @@ class ClassifierPrediction extends connect(store)(PageViewElement) {
     const imageUrl = item ? item.imageUrl : '';
     const fileName = item ? item.fileName : '';
 
-    const result = (item && item.result && item.result[0]) ? item.result : [];
-    const classification = result[0].classification;
+    let result = (item && item.result && item.result[0]) ? item.result : null;
+    const classification = result ? result[0].classification : null;
     const confidence = classification ? classification.score.toFixed(3) : 0;
 
     const resultText = result ? `This case is classified as '${result[0].displayName}' with a confidence score of ${confidence}` : '';
+    result = result ? result : [];
 
     return html`
     <div class="card-container">
