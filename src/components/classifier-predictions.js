@@ -4,6 +4,7 @@ import {repeat} from 'lit-html/directives/repeat.js';
 import {connect} from 'pwa-helpers/connect-mixin.js';
 
 import './prediction-item.js';
+import {SharedStyles} from "./shared-styles.js";
 
 import {store} from '../store.js';
 
@@ -17,6 +18,7 @@ store.addReducers({
 class ClassifierPredictions extends connect(store)(PageViewElement) {
   static get styles() {
     return [
+      SharedStyles,
       css`
       :host {
         display: block;
@@ -35,11 +37,6 @@ class ClassifierPredictions extends connect(store)(PageViewElement) {
         padding: 8px;
       }
       
-      .predictions-desc {
-        padding: 24px 16px 0;
-        text-align: center;
-      }
-      
       /* 3 per row */
       @media screen and (max-width: 1372px) {
           prediction-item {
@@ -55,7 +52,7 @@ class ClassifierPredictions extends connect(store)(PageViewElement) {
       }
       
       /* 1 per row */
-      @media screen and (max-width: 400px) {
+      @media screen and (max-width: 448px) {
           .predictions {
             width: 90%;
           }
@@ -69,30 +66,28 @@ class ClassifierPredictions extends connect(store)(PageViewElement) {
   }
 
   render() {
-    const hasItems = this._items && this._items.length > 0;
+    const noItems = !this._items || this._items.length === 0;
     return html`
-        <div ?hidden="${this._showOffline}">
-          <div class="predictions" ?hidden="${!hasItems}">
-              ${repeat(this._items, item => html`
-                <prediction-item .item="${item}"></prediction-item>
-              `)}
-          </div>
-          <div class="predictions-desc" ?hidden="${hasItems}">You will find your prediction results here.</div>
+        <div class="page-desc" ?hidden="${!noItems}">You will find your prediction results here.</div>
+        <img class="bg-image" ?hidden="${!noItems}" src="images/automl-lead.svg" alt="Predictions page background image">
+        <div class="predictions" ?hidden="${noItems || this._showOffline}">
+            ${repeat(this._items, item => html`
+              <prediction-item .item="${item}"></prediction-item>
+            `)}
         </div>
-        <!-- TODO: Show refresh button when _showOffline is true-->
     `;
   }
 
   static get properties() {
     return {
       _items: {type: Array},
-      _showOffline: { type: Boolean }
+      _showOffline: {type: Boolean}
     }
   }
 
   stateChanged(state) {
     this._items = itemListSelector(state);
-    this._showOffline = (state.app.offline && state.predictions.failure) || !state.user.currentUser;
+    this._showOffline = state.app.offline && state.predictions.failure;
   }
 }
 

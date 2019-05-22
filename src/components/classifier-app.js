@@ -19,8 +19,7 @@ store.addReducers({
 import {
   navigate,
   updateOffline,
-  updateDrawerState,
-  showErrorDialog
+  updateDrawerState
 } from '../actions/app.js';
 
 // These are the elements needed by this element.
@@ -29,9 +28,10 @@ import '@polymer/app-layout/app-header/app-header.js';
 import '@polymer/app-layout/app-scroll-effects/effects/waterfall.js';
 import '@polymer/app-layout/app-toolbar/app-toolbar.js';
 
-import {menuIcon, backIcon, accountIcon} from './classifier-icons.js';
+import {menuIcon, accountIcon} from './classifier-icons.js';
 import './snack-bar.js';
 import './classifier-warning-dialog.js'
+import {toTitleCase} from "../utils.js";
 
 class ClassifierApp extends connect(store)(LitElement) {
   static get properties() {
@@ -56,7 +56,7 @@ class ClassifierApp extends connect(store)(LitElement) {
           --app-header-height: 64px;
           --app-footer-height: 104px;
           /* The 1px is to make the scrollbar appears all the time */
-          --app-main-content-min-height: calc(100vh - var(--app-header-height) - var(--app-footer-height) + 1px);
+          --app-main-content-min-height: calc(100vh - var(--app-header-height) - var(--app-footer-height));
 
           --app-primary-color: #42a5f5;
           --app-secondary-color: #80d6ff;
@@ -226,13 +226,11 @@ class ClassifierApp extends connect(store)(LitElement) {
   }
 
   render() {
-    const hideMenuBtn = this._page === 'prediction';
-
     return html`
       <!-- Header -->
       <app-header condenses reveals effects="waterfall">
         <app-toolbar class="toolbar-top">
-          <button class="menu-btn" title="Menu" ?hidden="${hideMenuBtn}" @click="${this._menuButtonClicked}">${menuIcon}</button>
+          <button class="menu-btn" title="Menu" @click="${this._menuButtonClicked}">${menuIcon}</button>
           <div main-title><a href="/" aria-label="Go to home"><img class="logo" src="images/logo.svg" alt="Logo"></a></div>
           
           <!-- This gets hidden on a small screen-->
@@ -244,7 +242,7 @@ class ClassifierApp extends connect(store)(LitElement) {
           </nav>
           
           <button class="avatar" aria-label="Avatar"
-            @click="${() => this._user && this._signOut()}">
+            @click="${() => this._user ? this._signOut() : this._signIn}">
             ${this._user && this._user.photoURL ? html`<img src="${this._user.photoURL}">` : accountIcon}
           </button>
         </app-toolbar>
@@ -309,7 +307,7 @@ class ClassifierApp extends connect(store)(LitElement) {
 
   updated(changedProps) {
     if (changedProps.has('_page')) {
-      const pageTitle = this.appTitle + ' - ' + this._page;
+      const pageTitle = toTitleCase(this._page) + ' - ' + this.appTitle;
       updateMetadata({
         title: pageTitle,
         description: pageTitle

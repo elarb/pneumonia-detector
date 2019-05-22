@@ -29,8 +29,8 @@ class ClassifierPredict extends connect(store)(PageViewElement) {
       }
 
       .classifier-bg {
-        height: 300px;
-        max-width: 570px;
+        height: 336px;
+        max-width: 608px;
         margin: 16px auto;
       }
 
@@ -52,6 +52,10 @@ class ClassifierPredict extends connect(store)(PageViewElement) {
       
       .upload-field {
         display: block;
+      }
+      
+      #firebaseui-auth-container {
+        margin-top: 48px;
       }
       
       [hidden] {
@@ -178,9 +182,10 @@ class ClassifierPredict extends connect(store)(PageViewElement) {
       signInOptions: [
         // Leave the lines as is for the providers you want to offer your users.
         firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-        firebase.auth.GithubAuthProvider.PROVIDER_ID,
+        // firebase.auth.GithubAuthProvider.PROVIDER_ID,
         firebaseui.auth.AnonymousAuthProvider.PROVIDER_ID
       ],
+      credentialHelper: firebaseui.auth.CredentialHelper.GOOGLE_YOLO,
       // tosUrl and privacyPolicyUrl accept either url string or a callback function.
       // Terms of service url/callback.
       tosUrl: 'pneumonia.wep.app/tos',
