@@ -330,7 +330,9 @@ class ClassifierApp extends connect(store)(LitElement) {
   }
 
   _signOut() {
-    firebase.auth().signOut();
+    firebase.auth().signOut().then(() => {
+      window.location.assign('/');
+    });
   }
 
   _handleError(e) {
