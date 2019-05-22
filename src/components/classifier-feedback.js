@@ -8,9 +8,10 @@ class ClassifierFeedback extends PageViewElement {
     return [
       SharedStyles,
       css`
-        p {
-          text-align: center;
-        }
+      :host {
+        display: block;
+        box-sizing: border-box;
+      }
       `
     ];
   }
@@ -19,8 +20,8 @@ class ClassifierFeedback extends PageViewElement {
     return html`
       <section>
         <h2>Feedback</h2>
-         <p> This app is developed by the <a target="_blank" rel="noopener" href="https://pupilflow.com">PupilFlow</a> team. 
-         Want to learn more or send feedback? Email us at <a href="mailto:contact@pupilflow.com">info@pupilflow.com</a></p>
+         <p> This app is developed by <a target="_blank" rel="noopener" href="https://pupilflow.com">PupilFlow</a>. 
+         Want to learn more or send feedback? Email me at <a href="mailto:contact@pupilflow.com">elias@pupilflow.com</a></p>
       </section>
       <section>
         <h2>About</h2>
@@ -40,8 +41,8 @@ class ClassifierFeedback extends PageViewElement {
         appears as increased opacity on CXR. When available, comparison of CXRs of the patient taken at different time 
         points and correlation with clinical symptoms and history are helpful in making the diagnosis.</p>
         
-        <p>With this app we want to help radiologists automate initial detection (imaging screening) of potential 
-        pneumonia cases in order to prioritize and expedite their review.</p>
+        <p>This app uses state-of-the-art AI to automate initial detection (imaging screening) of potential 
+        pneumonia cases, enabling radiologists to prioritize and expedite their review.</p>
       </section>
     `;
   }
