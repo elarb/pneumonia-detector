@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <title>Pneumonia Detector</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Web app that helps radiologists detect cases of Pneumonia using state-of-the-art machine learning models.">
+    <meta name="description" content="Web app that helps radiologists detect cases of Pneumonia using state-of-the-art AI.">
 
     <base href="/">
 
@@ -47,17 +47,9 @@
     <link rel="preconnect" href="https://apis.google.com">
     <link rel="preconnect" href="https://accounts.google.com">
     <link rel="preconnect" href="https://ssl.gstatic.com">
-
-    <script src="/__/firebase/6.0.2/firebase-app.js"></script>
-    <script src="/__/firebase/init.js"></script>
-
-    <script src="/__/firebase/6.0.2/firebase-auth.js"></script>
-    <script src="/__/firebase/6.0.2/firebase-firestore.js"></script>
-    <script src="/__/firebase/6.0.2/firebase-storage.js"></script>
-    <script src="https://cdn.firebase.com/libs/firebaseui/4.0.0/firebaseui.js"></script>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
 
     <script>
-      // Load and register pre-caching Service Worker
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', function() {
           navigator.serviceWorker.register('service-worker.js', {
@@ -71,7 +63,6 @@
       window.process = { env: { NODE_ENV: 'production' } };
     </script>
 
-    <!-- Add any global styles for body, document, etc. -->
     <style>
       body {
         margin: 0;
@@ -89,9 +80,17 @@
     <noscript>
       Please enable JavaScript to view this website.
     </noscript>
+
+    <script src="/__/firebase/6.0.2/firebase-app.js"></script>
+    <script src="/__/firebase/init.js"></script>
+
+    <script src="/__/firebase/6.0.2/firebase-auth.js"></script>
+    <script src="/__/firebase/6.0.2/firebase-firestore.js"></script>
+    <script src="/__/firebase/6.0.2/firebase-storage.js"></script>
+    <script src="https://cdn.firebase.com/libs/firebaseui/4.0.0/firebaseui.js"></script>
+
     <!-- Load webcomponents-loader.js to check and load any polyfills your browser needs -->
     <script src="node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
-    <!-- Built with love using PWA Starter Kit -->
     <script type="module" src="src/components/classifier-app.js"></script>
   </body>
 </html>
