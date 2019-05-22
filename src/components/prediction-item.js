@@ -2,7 +2,7 @@ import {LitElement, html, css} from 'lit-element';
 
 import './classifier-image.js';
 import {MwcStyle} from "./mwc-style.js";
-import {formatDate} from "../utils.js";
+import {tsToDate, toTitleCase} from "../utils.js";
 
 class PredictionItem extends LitElement {
   static get styles() {
@@ -60,7 +60,7 @@ class PredictionItem extends LitElement {
   render() {
     const item = this.item ? this.item : null;
     const id = item && item.id ? item.id : '';
-    const date = (item && item.timestamp && (Number.isInteger(item.timestamp))) ? formatDate(item.timestamp) : '';
+    const date = (item && item.timestamp && (Number.isInteger(item.timestamp))) ? tsToDate(item.timestamp) : '';
 
     const thumbnail = item ? item.thumbUrl : null;
     const fileName = item ? item.fileName : '';
@@ -69,7 +69,7 @@ class PredictionItem extends LitElement {
 
     const hasScore = result && result.classification && result.classification.score;
     const score = hasScore ? Math.round(result.classification.score * 100) : 0;
-    const displayName = result ? result.displayName.toLowerCase().replace(/(^\w|\s+\w)/g, str => str.toUpperCase()) : '';
+    const displayName = result ? toTitleCase(result.displayName) : '';
 
     return html`
     <div class="mdc-card prediction-card">

@@ -10,7 +10,7 @@ import '@polymer/paper-spinner/paper-spinner-lite.js'
 import {fetchPrediction, removePrediction} from '../actions/prediction.js';
 import {prediction, predictionSelector} from '../reducers/prediction.js';
 import {MwcStyle} from "./mwc-style.js";
-import {formatDate} from "../utils.js";
+import {tsToDate} from "../utils.js";
 import {updateLocationURL} from "../actions/app";
 
 store.addReducers({
@@ -120,9 +120,10 @@ class ClassifierPrediction extends connect(store)(PageViewElement) {
       }
       
       @media (max-width: 460px) {
-        .container {
+        .card-container {
           width: 100%;
-        }
+          margin: 0;
+        } 
       }
     `];
   }
@@ -134,7 +135,7 @@ class ClassifierPrediction extends connect(store)(PageViewElement) {
 
     const item = this._item ? this._item : null;
     const id = item && item.id ? item.id : '';
-    const date = (item && item.timestamp && (Number.isInteger(item.timestamp))) ? formatDate(item.timestamp) : '';
+    const date = (item && item.timestamp && (Number.isInteger(item.timestamp))) ? tsToDate(item.timestamp) : '';
 
     const imageUrl = item ? item.imageUrl : '';
     const fileName = item ? item.fileName : '';
@@ -145,7 +146,7 @@ class ClassifierPrediction extends connect(store)(PageViewElement) {
     <div class="card-container">
       <div class="mdc-card prediction-card" ?loading="${this._isFetching}">
         <div class="mdc-card__action-buttons">
-            <a href="/predictions" class="mdc-button mdc-card__action back-btn">Back</a>
+            <a href="/predictions" class="back-btn mdc-button mdc-button--outlined mdc-ripple-upgraded">Back</a>
         </div>
         <div class="mdc-card__primary-action prediction-card__primary-action" tabindex="0">
           <div class="mdc-card__media mdc-card__media--16-9" style="background-image: url(&quot;${imageUrl}&quot;);"></div>

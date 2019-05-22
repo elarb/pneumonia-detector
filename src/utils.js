@@ -23,8 +23,11 @@ export const uuid4 = () => {
   return uuid;
 };
 
-export const formatDate = (timestamp) => {
+export const tsToDate = (timestamp) => {
   timestamp -= (new Date().getTimezoneOffset() * 60000);
   return new Date(timestamp).toISOString().replace(/T/, ' ').replace(/\..+/, '');
 };
 
+export const toTitleCase = (str) => {
+  return str.toLowerCase().replace(/(^\w|\s+\w)/g, str => str.toUpperCase());
+};
