@@ -28,7 +28,7 @@ import '@polymer/app-layout/app-header/app-header.js';
 import '@polymer/app-layout/app-scroll-effects/effects/waterfall.js';
 import '@polymer/app-layout/app-toolbar/app-toolbar.js';
 
-import {menuIcon, accountIcon} from './classifier-icons.js';
+import {menuIcon, logoutIcon} from './classifier-icons.js';
 import './snack-bar.js';
 import './classifier-warning-dialog.js'
 import {toTitleCase} from "../utils.js";
@@ -123,7 +123,7 @@ class ClassifierApp extends connect(store)(LitElement) {
 
         .menu-btn,
         .back-btn,
-        .avatar {
+        .signout {
           display: inline-block;
           width: 44px;
           height: 44px;
@@ -135,12 +135,12 @@ class ClassifierApp extends connect(store)(LitElement) {
           cursor: pointer;
           text-decoration: none;
         }
-
-        .avatar {
+        
+        .signout {
           padding: 2px;
         }
   
-        .avatar > img {
+        .signout > img {
           width: 36px;
           height: 36px;
           border-radius: 50%;
@@ -157,6 +157,7 @@ class ClassifierApp extends connect(store)(LitElement) {
           padding: 24px;
           background: var(--app-drawer-background-color);
           position: relative;
+          margin: auto;
         }
 
         .drawer-list > a {
@@ -204,6 +205,7 @@ class ClassifierApp extends connect(store)(LitElement) {
           .toolbar-list {
             display: block;
             padding-right: 64px;
+            margin: auto;
           }
 
           .menu-btn {
@@ -241,10 +243,8 @@ class ClassifierApp extends connect(store)(LitElement) {
             <a ?selected="${this._page === 'feedback'}" href="/feedback">Feedback</a>
           </nav>
           
-          <button class="avatar" aria-label="Avatar"
-            @click="${() => this._user ? this._signOut() : this._signIn}">
-            ${this._user && this._user.photoURL ? html`<img src="${this._user.photoURL}">` : accountIcon}
-          </button>
+          <button ?hidden="${!this._user}" class="signout" aria-label="Sign out" title="Sign out"
+            @click="${() => this._user && this._signOut()}">${logoutIcon}</button>
         </app-toolbar>
         
       </app-header>
@@ -298,7 +298,7 @@ class ClassifierApp extends connect(store)(LitElement) {
     installMediaQueryWatcher(`(min-width: 460px)`,
       () => store.dispatch(updateDrawerState(false)));
 
-    store.dispatch(fetchStoredUser());
+    // store.dispatch(fetchStoredUser());
 
     firebase.auth().onAuthStateChanged(user => {
       store.dispatch(setUser(user));
@@ -322,11 +322,6 @@ class ClassifierApp extends connect(store)(LitElement) {
 
   _drawerOpenedChanged(e) {
     store.dispatch(updateDrawerState(e.target.opened));
-  }
-
-  _signIn() {
-    let provider = new firebase.auth.GoogleAuthProvider();
-    firebase.auth().signInWithPopup(provider);
   }
 
   _signOut() {

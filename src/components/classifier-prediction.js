@@ -214,11 +214,6 @@ class ClassifierPrediction extends connect(store)(PageViewElement) {
     store.dispatch(updateLocationURL('/predictions'));
   }
 
-  stateChanged(state) {
-    this._item = predictionSelector(state);
-    this._isFetching = state.prediction.isFetching;
-  }
-
   _downloadAsJson() {
     if (!this._item) {
       return;
@@ -233,6 +228,11 @@ class ClassifierPrediction extends connect(store)(PageViewElement) {
     el.click();
 
     document.body.removeChild(el);
+  }
+
+  stateChanged(state) {
+    this._item = predictionSelector(state);
+    this._isFetching = state.prediction.isFetching;
   }
 }
 
