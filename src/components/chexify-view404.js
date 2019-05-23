@@ -4,7 +4,7 @@ import { PageViewElement } from './page-view-element.js';
 // These are the shared styles needed by this element.
 import { SharedStyles } from './shared-styles.js';
 
-class ClassifierView404 extends PageViewElement {
+class ChexifyView404 extends PageViewElement {
   static get styles() {
     return [
       SharedStyles
@@ -24,4 +24,4 @@ class ClassifierView404 extends PageViewElement {
   }
 }
 
-window.customElements.define('classifier-view404', ClassifierView404);
+window.customElements.define('chexify-view404', ChexifyView404);

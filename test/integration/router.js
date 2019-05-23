@@ -32,7 +32,7 @@ describe('routing tests', function() {
 
   it('the page selector switches pages', async function() {
     await page.goto(`${appUrl}`);
-    await page.waitForSelector('classifier-app', {visible: true});
+    await page.waitForSelector('chexify-app', {visible: true});
 
     await testNavigation(page, 'feedback', 'Feedback');
     await testNavigation(page, 'predict', 'Predict');
@@ -40,7 +40,7 @@ describe('routing tests', function() {
 
   it('the page selector switches pages in a different way', async function() {
     await page.goto(`${appUrl}`);
-    await page.waitForSelector('classifier-app', {visible: true});
+    await page.waitForSelector('chexify-app', {visible: true});
 
     // Setup
     await page.evaluate(() => {
@@ -75,18 +75,18 @@ async function testNavigation(page, href, linkText) {
   const selector = `a[href="/${href}"]`;
 
   // Does the link say the right thing?
-  const classifierApp = await page.$('classifier-app');
-  const classifierText = await page.evaluate(getShadowRootChildProp, classifierApp, selector, 'textContent');
-  expect(await classifierText).equal(linkText);
+  const chexifyApp = await page.$('chexify-app');
+  const chexifyText = await page.evaluate(getShadowRootChildProp, chexifyApp, selector, 'textContent');
+  expect(await chexifyText).equal(linkText);
 
   // Does the click take you to the right page?
-  await page.evaluate(doShadowRootClick, classifierApp, selector);
+  await page.evaluate(doShadowRootClick, chexifyApp, selector);
   const newUrl = await page.evaluate('window.location.href')
   expect(newUrl).equal(`${appUrl}/${href}`);
 }
 
 async function testNavigationInADifferentWay(page, href, linkText) {
-  const query = `classifier-app::shadow a[href="/${href}"]`;
+  const query = `chexify-app::shadow a[href="/${href}"]`;
 
   const linkHandle = await page.evaluateHandle((query) => window.deepQuerySelector(query), query);
   const text = await page.evaluate((el) => el.textContent, linkHandle);

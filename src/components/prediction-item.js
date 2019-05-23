@@ -1,6 +1,6 @@
 import {LitElement, html, css} from 'lit-element';
 
-import './classifier-image.js';
+import './chexify-image.js';
 import {MwcStyle} from "./mwc-style.js";
 import {tsToDate, toTitleCase} from "../utils.js";
 

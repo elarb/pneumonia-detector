@@ -3,7 +3,7 @@ import {PageViewElement} from './page-view-element.js';
 
 import {SharedStyles} from './shared-styles.js';
 
-class ClassifierFeedback extends PageViewElement {
+class ChexifyFeedback extends PageViewElement {
   static get styles() {
     return [
       SharedStyles,
@@ -48,4 +48,4 @@ class ClassifierFeedback extends PageViewElement {
   }
 }
 
-window.customElements.define('classifier-feedback', ClassifierFeedback);
+window.customElements.define('chexify-feedback', ChexifyFeedback);

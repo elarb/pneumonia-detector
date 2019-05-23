@@ -1,6 +1,6 @@
 {
-  "name": "Pneumonia Detector App",
-  "short_name": "Detector",
+  "name": "CheXify App",
+  "short_name": "CheXify",
   "description": "Detect cases of Pneumonia by uploading chest X-ray images.",
   "start_url": "/",
   "display": "standalone",

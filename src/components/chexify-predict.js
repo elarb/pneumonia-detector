@@ -3,7 +3,7 @@ import {PageViewElement} from './page-view-element.js';
 import {connect} from 'pwa-helpers/connect-mixin.js';
 
 import '@vaadin/vaadin-upload/vaadin-upload.js';
-import './classifier-image.js';
+import './chexify-image.js';
 import {SharedStyles} from "./shared-styles.js";
 
 import {uuid4} from "../utils.js";
@@ -15,7 +15,7 @@ import {listenPrediction} from "../actions/prediction.js";
 
 store.addReducers({prediction});
 
-class ClassifierPredict extends connect(store)(PageViewElement) {
+class ChexifyPredict extends connect(store)(PageViewElement) {
   static get properties() {
     return {
       _page: {type: String},
@@ -31,13 +31,13 @@ class ClassifierPredict extends connect(store)(PageViewElement) {
         display: block;
       }
 
-      .classifier-bg {
+      .chexify-bg {
         height: 336px;
         max-width: 608px;
         margin: 16px auto;
       }
 
-      .classifier-desc, .sign-in-text, .img-req {
+      .chexify-desc, .sign-in-text, .img-req {
         text-align: center;
       }
       
@@ -69,7 +69,7 @@ class ClassifierPredict extends connect(store)(PageViewElement) {
         :host {
           margin: 8px;
         }
-        .classifier-bg {
+        .chexify-bg {
           height: 200px;
           margin: 8px auto;
         }
@@ -88,8 +88,8 @@ class ClassifierPredict extends connect(store)(PageViewElement) {
     const maxFiles = isAnonymous ? 0 : 1;
     return html`
       <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/4.0.0/firebaseui.css" />
-      <classifier-image class="classifier-bg" alt="Pneumonia Detector Image" center src="images/xray-bg.jpg" placeholder=""></classifier-image>
-      <div class="classifier-desc">Detect cases of Pneumonia by uploading chest X-ray images.</div>
+      <chexify-image class="chexify-bg" alt="Pneumonia Detector Image" center src="images/xray-bg.jpg" placeholder=""></chexify-image>
+      <div class="chexify-desc">Detect cases of Pneumonia by uploading chest X-ray images.</div>
       <div class="upload-field" ?hidden="${!this._user}">
         <div class="img-req">
           <p ?hidden="${isAnonymous}">Maximum file size is 1.5MB. Supported formats: JPEG, PNG, GIF.</p>
@@ -196,11 +196,9 @@ class ClassifierPredict extends connect(store)(PageViewElement) {
       // credentialHelper: firebaseui.auth.CredentialHelper.GOOGLE_YOLO,
       // tosUrl and privacyPolicyUrl accept either url string or a callback function.
       // Terms of service url/callback.
-      tosUrl: 'pneumonia.wep.app/tos',
+      tosUrl: '/tos',
       // Privacy policy url/callback.
-      privacyPolicyUrl: () => {
-        window.location.assign('pneumonia.wep.app/privacy');
-      }
+      privacyPolicyUrl: '/privacy'
     };
 
     // Initialize the FirebaseUI Widget using Firebase.
@@ -210,4 +208,4 @@ class ClassifierPredict extends connect(store)(PageViewElement) {
   }
 }
 
-window.customElements.define('classifier-predict', ClassifierPredict);
+window.customElements.define('chexify-predict', ChexifyPredict);

@@ -27,10 +27,10 @@ const loadPage = (page, predId) => async (dispatch, getState) => {
   let module;
   switch (page) {
     case 'predict':
-      await import('../components/classifier-predict.js');
+      await import('../components/chexify-predict.js');
       break;
     case 'predictions':
-      module = await import('../components/classifier-predictions.js');
+      module = await import('../components/chexify-predictions.js');
       dispatch(module.fetchPredictions());
       break;
     case 'prediction':
@@ -38,7 +38,7 @@ const loadPage = (page, predId) => async (dispatch, getState) => {
         page = 'view404';
         break;
       }
-      module = await import('../components/classifier-prediction.js');
+      module = await import('../components/chexify-prediction.js');
 
       // Fetch the prediction from the given prediction id.
       let pred = getState().prediction;
@@ -53,17 +53,17 @@ const loadPage = (page, predId) => async (dispatch, getState) => {
 
       break;
     case 'train':
-      await import('../components/classifier-train.js');
+      await import('../components/chexify-train.js');
       break;
     case 'feedback':
-      await import('../components/classifier-feedback.js');
+      await import('../components/chexify-feedback.js');
       break;
     default:
       page = 'view404';
   }
 
   if (page === 'view404') {
-    import('../components/classifier-view404.js');
+    import('../components/chexify-view404.js');
   }
 
   dispatch(updatePage(page));

@@ -2,7 +2,7 @@ import {html, css} from 'lit-element';
 import {PageViewElement} from './page-view-element.js';
 import {SharedStyles} from "./shared-styles.js";
 
-class ClassifierTrain extends PageViewElement {
+class ChexifyTrain extends PageViewElement {
   static get styles() {
     return [
       SharedStyles,
@@ -22,4 +22,4 @@ class ClassifierTrain extends PageViewElement {
   }
 }
 
-window.customElements.define('classifier-train', ClassifierTrain);
+window.customElements.define('chexify-train', ChexifyTrain);

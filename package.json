@@ -1,6 +1,6 @@
 {
-  "name": "pneumonia-detector",
-  "version": "0.1.0",
+  "name": "chexify",
+  "version": "1.0.0",
   "scripts": {
     "start": "polymer serve",
     "prebuild": "gulp optimize-images",

@@ -15,7 +15,7 @@ store.addReducers({
   predictions
 });
 
-class ClassifierPredictions extends connect(store)(PageViewElement) {
+class ChexifyPredictions extends connect(store)(PageViewElement) {
   static get styles() {
     return [
       SharedStyles,
@@ -91,6 +91,6 @@ class ClassifierPredictions extends connect(store)(PageViewElement) {
   }
 }
 
-window.customElements.define('classifier-predictions', ClassifierPredictions);
+window.customElements.define('chexify-predictions', ChexifyPredictions);
 
 export {fetchPredictions}

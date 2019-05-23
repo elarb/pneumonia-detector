@@ -1,7 +1,7 @@
 import {LitElement, html, css} from "lit-element";
 import '@polymer/paper-dialog/paper-dialog.js';
 
-class ClassifierWarningDialog extends LitElement {
+class ChexifyWarningDialog extends LitElement {
   static get properties() {
     return {
       _header: {type: String},
@@ -48,4 +48,4 @@ class ClassifierWarningDialog extends LitElement {
   }
 }
 
-customElements.define('classifier-warning-dialog', ClassifierWarningDialog);
+customElements.define('chexify-warning-dialog', ChexifyWarningDialog);

@@ -1,11 +1,11 @@
 {
   "/": {
-    "src/components/classifier-app.js": {
+    "src/components/chexify-app.js": {
       "crossorigin": "anonymous",
       "type": "script",
       "weight": 1
     },
-    "src/components/classifier-predict.js": {
+    "src/components/chexify-predict.js": {
       "crossorigin": "anonymous",
       "type": "script",
       "weight": 1
@@ -16,12 +16,12 @@
     }
   },
   "/predict": {
-    "src/components/classifier-app.js": {
+    "src/components/chexify-app.js": {
       "crossorigin": "anonymous",
       "type": "script",
       "weight": 1
     },
-    "src/components/classifier-predict.js": {
+    "src/components/chexify-predict.js": {
       "crossorigin": "anonymous",
       "type": "script",
       "weight": 1
@@ -32,12 +32,12 @@
     }
   },
   "/prediction": {
-    "src/components/classifier-app.js": {
+    "src/components/chexify-app.js": {
       "crossorigin": "anonymous",
       "type": "script",
       "weight": 1
     },
-    "src/components/classifier-prediction.js": {
+    "src/components/chexify-prediction.js": {
       "crossorigin": "anonymous",
       "type": "script",
       "weight": 1
@@ -48,12 +48,12 @@
     }
   },
   "/predictions": {
-    "src/components/classifier-app.js": {
+    "src/components/chexify-app.js": {
       "crossorigin": "anonymous",
       "type": "script",
       "weight": 1
     },
-    "src/components/classifier-predictions.js": {
+    "src/components/chexify-predictions.js": {
       "crossorigin": "anonymous",
       "type": "script",
       "weight": 1
@@ -64,12 +64,12 @@
     }
   },
   "/train": {
-    "src/components/classifier-app.js": {
+    "src/components/chexify-app.js": {
       "crossorigin": "anonymous",
       "type": "script",
       "weight": 1
     },
-    "src/components/classifier-train.js": {
+    "src/components/chexify-train.js": {
       "crossorigin": "anonymous",
       "type": "script",
       "weight": 1
@@ -80,12 +80,12 @@
     }
   },
   "/feedback": {
-    "src/components/classifier-app.js": {
+    "src/components/chexify-app.js": {
       "crossorigin": "anonymous",
       "type": "script",
       "weight": 1
     },
-    "src/components/classifier-feedback.js": {
+    "src/components/chexify-feedback.js": {
       "crossorigin": "anonymous",
       "type": "script",
       "weight": 1

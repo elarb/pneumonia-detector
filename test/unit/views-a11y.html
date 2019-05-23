@@ -28,17 +28,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <body>
     <test-fixture id="predict">
       <template>
-        <classifier-predict active></classifier-predict>
+        <chexify-predict active></chexify-predict>
       </template>
     </test-fixture>
     <test-fixture id="feedback">
       <template>
-        <classifier-feedback active></classifier-feedback>
+        <chexify-feedback active></chexify-feedback>
       </template>
     </test-fixture>
     <test-fixture id="view404">
       <template>
-        <classifier-view404 active></classifier-view404>
+        <chexify-view404 active></chexify-view404>
       </template>
     </test-fixture>
 
@@ -46,22 +46,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       import '@polymer/test-fixture';
       import 'axe-core/axe.min.js';
       import {axeReport} from 'pwa-helpers/axe-report.js';
-      import '../../src/components/classifier-predict.js';
-      import '../../src/components/classifier-feedback.js';
-      import '../../src/components/classifier-view404.js';
+      import '../../src/components/chexify-predict.js';
+      import '../../src/components/chexify-feedback.js';
+      import '../../src/components/chexify-view404.js';
 
       suite('views a11y tests', function() {
-        test('classifier-predict', function() {
+        test('chexify-predict', function() {
           const el = fixture('predict');
           return axeReport(el);
         });
 
-        test('classifier-feedback', function() {
+        test('chexify-feedback', function() {
           const el = fixture('feedback');
           return axeReport(el);
         });
 
-        test('classifier-view404', function() {
+        test('chexify-view404', function() {
           const el = fixture('view404');
           return axeReport(el);
         });

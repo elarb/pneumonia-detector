@@ -1,6 +1,6 @@
 import {LitElement, html, css} from 'lit-element';
 
-class ClassifierImage extends LitElement {
+class ChexifyImage extends LitElement {
   static get styles() {
     return [
       css`
@@ -95,4 +95,4 @@ class ClassifierImage extends LitElement {
   }
 }
 
-customElements.define('classifier-image', ClassifierImage);
+customElements.define('chexify-image', ChexifyImage);

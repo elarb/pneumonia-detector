@@ -4,7 +4,7 @@ import {connect} from 'pwa-helpers/connect-mixin.js';
 import {repeat} from 'lit-html/directives/repeat.js';
 import {store} from '../store.js';
 
-import './classifier-image.js';
+import './chexify-image.js';
 import '@polymer/paper-spinner/paper-spinner-lite.js'
 
 import {fetchPrediction, removePrediction} from '../actions/prediction.js';
@@ -17,7 +17,7 @@ store.addReducers({
   prediction
 });
 
-class ClassifierPrediction extends connect(store)(PageViewElement) {
+class ChexifyPrediction extends connect(store)(PageViewElement) {
   static get styles() {
     return [
       MwcStyle,
@@ -236,6 +236,6 @@ class ClassifierPrediction extends connect(store)(PageViewElement) {
   }
 }
 
-window.customElements.define('classifier-prediction', ClassifierPrediction);
+window.customElements.define('chexify-prediction', ChexifyPrediction);
 
 export {fetchPrediction};

@@ -28,12 +28,12 @@ import '@polymer/app-layout/app-header/app-header.js';
 import '@polymer/app-layout/app-scroll-effects/effects/waterfall.js';
 import '@polymer/app-layout/app-toolbar/app-toolbar.js';
 
-import {menuIcon, logoutIcon} from './classifier-icons.js';
+import {menuIcon, logoutIcon} from './chexify-icons.js';
 import './snack-bar.js';
-import './classifier-warning-dialog.js'
+import './chexify-warning-dialog.js'
 import {toTitleCase} from "../utils.js";
 
-class ClassifierApp extends connect(store)(LitElement) {
+class ChexifyApp extends connect(store)(LitElement) {
   static get properties() {
     return {
       appTitle: {type: String},
@@ -118,7 +118,8 @@ class ClassifierApp extends connect(store)(LitElement) {
         }
         
         .logo {
-          width: 128px;
+          width: 112px;
+          margin-top: 8px;
         }
 
         .menu-btn,
@@ -263,19 +264,19 @@ class ClassifierApp extends connect(store)(LitElement) {
 
       <!-- Main content -->
       <main role="main" class="main-content">
-        <classifier-predict class="page" ?active="${this._page === 'predict'}"></classifier-predict>
-        <classifier-prediction class="page" ?active="${this._page === 'prediction'}"></classifier-prediction>
-        <classifier-predictions class="page" ?active="${this._page === 'predictions'}"></classifier-predictions>
-        <classifier-train class="page" ?active="${this._page === 'train'}"></classifier-train>
-        <classifier-feedback class="page" ?active="${this._page === 'feedback'}"></classifier-feedback>
-        <classifier-view404 class="page" ?active="${this._page === 'view404'}"></classifier-view404>
+        <chexify-predict class="page" ?active="${this._page === 'predict'}"></chexify-predict>
+        <chexify-prediction class="page" ?active="${this._page === 'prediction'}"></chexify-prediction>
+        <chexify-predictions class="page" ?active="${this._page === 'predictions'}"></chexify-predictions>
+        <chexify-train class="page" ?active="${this._page === 'train'}"></chexify-train>
+        <chexify-feedback class="page" ?active="${this._page === 'feedback'}"></chexify-feedback>
+        <chexify-view404 class="page" ?active="${this._page === 'view404'}"></chexify-view404>
       </main>
 
       <footer>
         <p>&copy ${new Date().getFullYear()} PupilFlow</p>
       </footer>
       
-      <classifier-warning-dialog id="errorDialog"></classifier-warning-dialog>
+      <chexify-warning-dialog id="errorDialog"></chexify-warning-dialog>
 
       <snack-bar ?active="${this._snackbarOpened}">
         You are now ${this._offline ? 'offline' : 'online'}.
@@ -346,4 +347,4 @@ class ClassifierApp extends connect(store)(LitElement) {
   }
 }
 
-window.customElements.define('classifier-app', ClassifierApp);
+window.customElements.define('chexify-app', ChexifyApp);
